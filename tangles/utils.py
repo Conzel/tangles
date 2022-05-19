@@ -71,10 +71,16 @@ def normalize(array):
     """
 
     ptp = np.ptp(array)
-    if ptp != 0:
-        return (array - np.min(array)) / np.ptp(array)
-    else:
+    if ptp == np.inf:
+        array = np.copy(array)
+        array[array != np.inf] = np.ptp(array[array != np.inf])
+        array[array == np.inf] = 1
+        return array
+    elif ptp == 0:
         return np.ones_like(array)
+    # normal case
+    else:
+        return (array - np.min(array)) / np.ptp(array)
 
 
 def matching_items(d1, d2):
