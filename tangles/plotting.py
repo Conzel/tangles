@@ -78,7 +78,6 @@ def plot_dataset_graph(G, ys, colors, ax, cmap, add_colorbar, pos):
 
 
 def plot_dataset_metric(xs, cs, colors, eq_cuts, ax, cmap, add_colorbar, gt):
-    plt.style.use('ggplot')
     plt.ioff()
 
     ax.tick_params(axis='x', colors=(0, 0, 0, 0))
@@ -116,28 +115,28 @@ def labels_to_colors(ys, cmap):
 
 
 def plot_soft_predictions(data, contracted_tree, eq_cuts=None, id_node=0, path=None):
-    cmap_groundtruth = plt.cm.get_cmap('autumn')
-    cmap_heatmap = plt.cm.get_cmap('Blues')
+    with plt.style.context("ggplot"):
+        cmap_groundtruth = plt.cm.get_cmap('autumn')
+        cmap_heatmap = plt.cm.get_cmap('Blues')
 
-    if path is not None:
-        output_path = path
-        output_path.mkdir(parents=True, exist_ok=True)
-
-    if data.ys is not None:
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 5))
-        colors = labels_to_colors(data.ys, cmap=cmap_groundtruth)
-        ax, pos = plot_dataset(data, colors, eq_cuts=eq_cuts,
-                               ax=ax, add_colorbar=False, gt=data.ys)
-
-        plt.tight_layout()
         if path is not None:
-            fig.savefig(output_path / "groundtruth.svg")
-            plt.close(fig)
-        else:
-            plt.show()
+            output_path = path
+            output_path.mkdir(parents=True, exist_ok=True)
 
-    plot_soft_prediction_node(data, contracted_tree.root, eq_cuts=eq_cuts, id_node=0, cmap=cmap_heatmap, path=path,
-                              pos=pos)
+        if data.ys is not None:
+            fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 5))
+            colors = labels_to_colors(data.ys, cmap=cmap_groundtruth)
+            ax, pos = plot_dataset(data, colors, eq_cuts=eq_cuts,
+                                ax=ax, add_colorbar=False, gt=data.ys)
+
+            if path is not None:
+                fig.savefig(output_path / "groundtruth.svg")
+                plt.close(fig)
+            else:
+                plt.show()
+
+        plot_soft_prediction_node(data, contracted_tree.root, eq_cuts=eq_cuts, id_node=0, cmap=cmap_heatmap, path=path,
+                                pos=pos)
 
 
 def plot_soft_prediction_node(data, node, eq_cuts, id_node, cmap, path, pos):
@@ -157,9 +156,10 @@ def plot_soft_prediction_node(data, node, eq_cuts, id_node, cmap, path, pos):
                  ax=ax, cmap=cmap, pos=pos)
     ax.set_xlabel(f"Node: {node}")
 
-    plt.tight_layout()
     if path is not None:
         fig.savefig(path / "node_nb_{}.svg".format(id_node))
+        fig.savefig(path / "node_nb_{}.pgf".format(id_node))
+        fig.savefig(path / "node_nb_{}.png".format(id_node))
         plt.close(fig)
     else:
         plt.show()
@@ -197,7 +197,6 @@ def plot_hard_predictions(data, ys_predicted, path=None):
                      ax=ax_predicted, add_colorbar=False)
     ax_predicted.set_title("Predicted clusters")
 
-    plt.tight_layout()
     if path is not None:
         fig.savefig(output_path / "hard_clustering.svg")
         plt.close(fig)
@@ -225,7 +224,6 @@ def get_position(G, ys):
 
 
 def plot_cuts(data, cuts, nb_cuts_to_plot, path):
-    plt.style.use('ggplot')
     plt.ioff()
 
     if path is not None:
@@ -243,7 +241,6 @@ def plot_cuts(data, cuts, nb_cuts_to_plot, path):
 
         fig, pos = plot_cut(
             data, cut=value_cuts[i], order=order_cuts[i], eq=eq, pos=pos)
-        plt.tight_layout()
         if path is not None:
             fig.savefig(path / "cut number {}.png".format(i))
             plt.close(fig)

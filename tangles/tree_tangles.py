@@ -103,7 +103,7 @@ class ContractedTangleNode(TangleNode):
             return "Root"
         else:
             orientation = 'T' if self.last_cut_added_orientation else 'F'
-            return f"{self.last_cut_added_id} -> {orientation}"
+            return f"{self.last_cut_added_id}" + f"{orientation}"
 
     def to_string_tree_like(self, height: int = 0):
         string = ""
@@ -282,7 +282,7 @@ class TangleTree(object):
         else:
             my_id = parent_id + direction
             str_o = 'T' if node.last_cut_added_orientation else 'F'
-            my_label = '{} -> {}'.format(node.last_cut_added_id, str_o)
+            my_label = '{}{}'.format(node.last_cut_added_id, str_o)
 
             tree.add_node(my_id)
             tree.add_edge(my_id, parent_id)
