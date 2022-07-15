@@ -60,7 +60,7 @@ def add_colorbar_to_ax(ax, cmap):
 
     cb = plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.Normalize(vmin=0, vmax=1), cmap=cmap),
                       ax=ax, orientation='vertical', shrink=0.7)
-    cb.ax.set_title('p', y=-.05)
+    cb.ax.set_title('p', y=-.07, fontsize=18)
 
     return ax
 
@@ -77,7 +77,7 @@ def plot_dataset_graph(G, ys, colors, ax, cmap, add_colorbar, pos):
     return ax, pos
 
 
-def plot_dataset_metric(xs, cs, colors, eq_cuts, ax, cmap, add_colorbar, gt):
+def plot_dataset_metric(xs, cs, colors, eq_cuts, ax, cmap, add_colorbar, gt, markersize=80):
     plt.ioff()
 
     ax.tick_params(axis='x', colors=(0, 0, 0, 0))
@@ -90,10 +90,11 @@ def plot_dataset_metric(xs, cs, colors, eq_cuts, ax, cmap, add_colorbar, gt):
     if gt is not None:
         for i in range(len(np.unique(gt))):
             sc = ax.scatter(xs_embedded[gt == i, 0], xs_embedded[gt == i, 1],
-                            color=colors[gt == i], marker=MARKERS[i], cmap=cmap)
+                            color=colors[gt == i], marker=MARKERS[i], cmap=cmap, s=markersize)
     else:
         # vmin=0, vmax=1, edgecolor='black')
-        sc = ax.scatter(xs_embedded[:, 0], xs_embedded[:, 1], color=colors)
+        sc = ax.scatter(xs_embedded[:, 0], xs_embedded[:, 1],
+                        color=colors, s=markersize)
 
     if add_colorbar:
         ax = add_colorbar_to_ax(ax, cmap)
@@ -116,6 +117,8 @@ def labels_to_colors(ys, cmap):
 
 def plot_soft_predictions(data, contracted_tree, eq_cuts=None, id_node=0, path=None):
     with plt.style.context("ggplot"):
+        mpl.rcParams.update({"font.size": 80, "axes.labelsize": 15,
+                            "xtick.labelsize": 14, "ytick.labelsize": 14, "legend.fontsize": 7})
         cmap_groundtruth = plt.cm.get_cmap('autumn')
         cmap_heatmap = plt.cm.get_cmap('Blues')
 
@@ -127,7 +130,7 @@ def plot_soft_predictions(data, contracted_tree, eq_cuts=None, id_node=0, path=N
             fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 5))
             colors = labels_to_colors(data.ys, cmap=cmap_groundtruth)
             ax, pos = plot_dataset(data, colors, eq_cuts=eq_cuts,
-                                ax=ax, add_colorbar=False, gt=data.ys)
+                                   ax=ax, add_colorbar=False, gt=data.ys)
 
             if path is not None:
                 fig.savefig(output_path / "groundtruth.svg")
@@ -136,7 +139,7 @@ def plot_soft_predictions(data, contracted_tree, eq_cuts=None, id_node=0, path=N
                 plt.show()
 
         plot_soft_prediction_node(data, contracted_tree.root, eq_cuts=eq_cuts, id_node=0, cmap=cmap_heatmap, path=path,
-                                pos=pos)
+                                  pos=pos)
 
 
 def plot_soft_prediction_node(data, node, eq_cuts, id_node, cmap, path, pos):

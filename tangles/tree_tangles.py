@@ -265,8 +265,9 @@ class TangleTree(object):
 
         pos = graphviz_layout(tree, prog='dot')
 
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(20, 10))
-        nx.draw_networkx(tree, pos=pos, ax=ax, labels=labels, node_size=1500)
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(19, 15))
+        nx.draw_networkx(tree, pos=pos, ax=ax, labels=labels,
+                         node_size=30000, font_size=70, width=5.0, node_color=r"#80b9f2")
         if path is not None:
             plt.savefig(path)
         else:
