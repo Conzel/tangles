@@ -2,14 +2,14 @@ from __future__ import annotations
 import numpy as np
 from sklearn.manifold import TSNE
 from typing import Union, Optional
+from PIL import Image, ImageDraw, ImageOps
 
 
 class Orientation(object):
-
     def __init__(self, direction: Union[int, bool, str]):
         self.direction: str
         self.orientation_bool: Optional[bool]
-        if isinstance(direction, str) and direction == 'both':
+        if isinstance(direction, str) and direction == "both":
             self.direction = direction
             self.orientation_bool = None
             return
@@ -17,15 +17,15 @@ class Orientation(object):
         # int case, cast to bool then
         if isinstance(direction, int):
             if direction != 0 and direction != 1:
-                raise ValueError('direction must be 0 or 1')
+                raise ValueError("direction must be 0 or 1")
             direction = bool(direction)
         self.orientation_bool = bool(direction)
 
         # bool case
         if direction is True:
-            self.direction = 'left'
+            self.direction = "left"
         elif direction is False:
-            self.direction = 'right'
+            self.direction = "right"
 
     def __eq__(self, value: Orientation) -> bool:
         if self.direction == value.direction:
@@ -34,12 +34,12 @@ class Orientation(object):
         return False
 
     def __str__(self) -> str:
-        if self.direction == 'both':
+        if self.direction == "both":
             return self.direction
-        elif self.direction == 'left':
-            return 'True'
-        elif self.direction == 'right':
-            return 'False'
+        elif self.direction == "left":
+            return "True"
+        elif self.direction == "right":
+            return "False"
         else:
             raise ValueError(f"Unknown direction: {self.direction}")
 
@@ -133,12 +133,11 @@ def get_points_to_plot(xs, cs):
         if cs is not None:
             points_to_embed = np.vstack([xs, cs])
             embeds = TSNE(n_components=2, random_state=42).fit_transform(
-                points_to_embed)
-            xs_embedded, cs_embedded = embeds[:-
-                                              nb_centers], embeds[-nb_centers:]
+                points_to_embed
+            )
+            xs_embedded, cs_embedded = embeds[:-nb_centers], embeds[-nb_centers:]
         else:
-            xs_embedded = TSNE(
-                n_components=2, random_state=42).fit_transform(xs)
+            xs_embedded = TSNE(n_components=2, random_state=42).fit_transform(xs)
     else:
         xs_embedded = xs
         cs_embedded = cs
