@@ -1,3 +1,4 @@
+from typing import Optional
 import matplotlib
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -146,7 +147,14 @@ def labels_to_colors(ys, cmap):
     return colors
 
 
-def plot_soft_predictions(data, contracted_tree, eq_cuts=None, id_node=0, path=None):
+def plot_soft_predictions(
+    data,
+    contracted_tree,
+    eq_cuts=None,
+    id_node=0,
+    path=None,
+    names: Optional[list[str]] = None,
+):
     with plt.style.context("ggplot"):
         mpl.rcParams.update(
             {
@@ -187,10 +195,13 @@ def plot_soft_predictions(data, contracted_tree, eq_cuts=None, id_node=0, path=N
             cmap=cmap_heatmap,
             path=path,
             pos=pos,
+            names=names,
         )
 
 
-def plot_soft_prediction_node(data, node, eq_cuts, id_node, cmap, path, pos):
+def plot_soft_prediction_node(
+    data, node, eq_cuts, id_node, cmap, path, pos, names: Optional[list[str]] = None
+):
     colors = cmap(node.p)
 
     if eq_cuts is not None:
@@ -206,7 +217,10 @@ def plot_soft_prediction_node(data, node, eq_cuts, id_node, cmap, path, pos):
     plot_dataset(
         data, colors, eq_cuts=eq_characterizing_cuts, ax=ax, cmap=cmap, pos=pos
     )
-    ax.set_xlabel(f"Node {id_node}", fontsize=25)
+    if names is None:
+        ax.set_xlabel(f"Node {id_node}", fontsize=25)
+    else:
+        ax.set_xlabel(names.pop(0), fontsize=25)
 
     if path is not None:
         fig.savefig(path / "node_nb_{}.svg".format(id_node), bbox_inches="tight")
@@ -220,12 +234,12 @@ def plot_soft_prediction_node(data, node, eq_cuts, id_node, cmap, path, pos):
     if node.left_child is not None:
         id_left = get_next_id(id_node, "left")
         plot_soft_prediction_node(
-            data, node.left_child, eq_cuts, id_left, cmap, path, pos=pos
+            data, node.left_child, eq_cuts, id_left, cmap, path, pos=pos, names=names
         )
     if node.right_child is not None:
         id_right = get_next_id(id_node, "right")
         plot_soft_prediction_node(
-            data, node.right_child, eq_cuts, id_right, cmap, path, pos=pos
+            data, node.right_child, eq_cuts, id_right, cmap, path, pos=pos, names=names
         )
 
 

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 import matplotlib.pyplot as plt
 
 import networkx as nx
@@ -501,8 +502,8 @@ class ContractedTangleTree(TangleTree):
     def _contract_subtree(self, parent, node):
         return self._contract_subtree_iterative(parent, node)
 
-    def plot_soft_tree(self, data, cut_values, path=None, show=True):
-        plot_soft_predictions(data, self, cut_values, path=Path("results"))
+    def plot_soft_tree(self, data, cut_values, path=None, show=True, names: Optional[list[str]] = None):
+        plot_soft_predictions(data, self, cut_values, path=Path("results"), names=names)
         tree = nx.Graph()
         labels = self._add_node_to_nx(tree, self.root)
 
