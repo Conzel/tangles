@@ -107,7 +107,7 @@ def plot_dataset_metric(
 
     ax.tick_params(axis="x", colors=(0, 0, 0, 0))
     ax.tick_params(axis="y", colors=(0, 0, 0, 0))
-    ax.set_aspect("equal", "box")
+    ax.set_aspect("auto", "box")
     ax.grid()
 
     xs_embedded, cs_embedded = get_points_to_plot(xs, cs)
@@ -173,7 +173,7 @@ def plot_soft_predictions(
             output_path.mkdir(parents=True, exist_ok=True)
 
         if data.ys is not None:
-            fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(4, 5))
+            fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(6, 5))
             colors = labels_to_colors(data.ys, cmap=cmap_groundtruth)
             ax, pos = plot_dataset(
                 data, colors, eq_cuts=eq_cuts, ax=ax, add_colorbar=False, gt=data.ys
@@ -213,7 +213,7 @@ def plot_soft_prediction_node(
     else:
         eq_characterizing_cuts = []
 
-    fig, ax = plt.subplots(figsize=(5, 5))
+    fig, ax = plt.subplots(figsize=(5, 4.5))
     plot_dataset(
         data, colors, eq_cuts=eq_characterizing_cuts, ax=ax, cmap=cmap, pos=pos
     )
